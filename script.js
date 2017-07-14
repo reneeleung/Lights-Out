@@ -2,7 +2,13 @@ document.addEventListener('DOMContentLoaded', domloaded, false);
 function domloaded() {
 var canvas = document.getElementById("theCanvas");
 var ctx = canvas.getContext('2d');
-
+var moves = 0;
+function isWon() {
+        for (var i = 0, len = rects.length; i < len; i++) {
+                if (colors[i] == 1) return false;
+        }
+        return true;
+}
 function clicked(rects, x, y) {
         var isClicked = false;
         for (var i = 0, len = rects.length; i < len; i++) {
@@ -15,6 +21,12 @@ function clicked(rects, x, y) {
                         if (i + Math.sqrt(len) < len) toggle(rects, colors, i + Math.sqrt(len));
                         if (i%Math.sqrt(len) - 1 >= 0) toggle(rects, colors, i - 1);
                         if (i%Math.sqrt(len) + 1 < Math.sqrt(len)) toggle(rects, colors, i + 1);
+                        moves++;
+                        if (isWon() == true) {
+                                alert("Solved in "+moves+" moves");
+                                moves = 0;
+                        }
+
                 }
         }
         return isClicked;
@@ -71,6 +83,7 @@ document.getElementById('shuffle').addEventListener('click', function(event){
                   colors[i] = 0;
               }
         }
+        moves = 0;
         printGrid();
 });
 document.getElementById('unsolve').addEventListener('click', function(event){
@@ -82,7 +95,7 @@ document.getElementById('solve').addEventListener('click', function(event){
         solutions[1] = colors[4] + colors[6] + colors[7] + colors[8];
         solutions[2] = colors[0] + colors[2] + colors[3] + colors[7] + colors[8];
         solutions[3] = colors[2] + colors[4] + colors[5] + colors[8];
-        solutions[4] = colors[1] + colors[3] + colors[5] + colors[5] + colors[7];
+        solutions[4] = colors[1] + colors[3] + colors[4] + colors[5] + colors[7];
         solutions[5] = colors[0] + colors[3] + colors[4] + colors[6];
         solutions[6] = colors[0] + colors[1] + colors[5] + colors[6] + colors[8];
         solutions[7] = colors[0] + colors[1] + colors[2] + colors[4];
@@ -91,8 +104,8 @@ document.getElementById('solve').addEventListener('click', function(event){
                 solutions[i] = solutions[i] % 2;
                 if (solutions[i] == 1) {
                         ctx.strokeStyle = '#FF00FF';
-                        ctx.lineWidth = 10;
-                        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w, rects[i].h);
+                        ctx.lineWidth = 5;
+                        ctx.strokeRect(rects[i].x, rects[i].y, rects[i].w-0.2, rects[i].h-0.2);
                 }
         }
 });
